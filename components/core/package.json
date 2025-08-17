@@ -1,0 +1,27 @@
+{
+  "name": "@ssh-keyring/core",
+  "version": "1.0.0-alpha",
+  "description": "Core utilities for running the ssh keyring",
+  "main": "out/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daschfortner/ssh-keyring.git"
+  },
+  "author": "Daschel Fortner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/daschfortner/ssh-keyring/issues"
+  },
+  "homepage": "https://github.com/daschfortner/ssh-keyring#readme",
+  "dependencies": {
+    "@types/node": "^24.3.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.0.5",
+    "ts-jest": "^29.4.1"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "ssh-keyring",
+  "version": "1.0.0-alpha",
+  "description": "A tool for managing deployment of ssh keys to multiple sources",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/daschfortner/ssh-keyring.git"
+  },
+  "author": "Daschel Fortner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/daschfortner/ssh-keyring/issues"
+  },
+  "homepage": "https://github.com/daschfortner/ssh-keyring#readme",
+  "devDependencies": {
+    "@tsconfig/node24": "^24.0.1",
+    "@types/node": "^24.3.0",
+    "typescript": "^5.9.2"
+  },
+  "workspaces": [
+    "components/cli",
+    "components/types",
+    "components/github",
+    "components/core"
+  ]
+}

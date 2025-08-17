@@ -1,0 +1,20 @@
+{
+  "name": "@ssh-keyring/plugin-github",
+  "version": "1.0.0-alpha",
+  "description": "An ssh-keyring plugin for managing ssh keys on github user accounts",
+  "main": "out/plugin.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daschfortner/ssh-keyring.git"
+  },
+  "author": "Daschel Fortner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/daschfortner/ssh-keyring/issues"
+  },
+  "homepage": "https://github.com/daschfortner/ssh-keyring#readme"
+}

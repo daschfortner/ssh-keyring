@@ -1,0 +1,28 @@
+{
+  "name": "@ssh-keyring/cli",
+  "version": "1.0.0-alpha",
+  "description": "The core module for the ssh-keyring application",
+  "main": "./bin/ssh-keyring.js",
+  "bin": "./bin/ssh-keyring.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daschfortner/ssh-keyring.git"
+  },
+  "author": "Daschel Fortner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/daschfortner/ssh-keyring/issues"
+  },
+  "homepage": "https://github.com/daschfortner/ssh-keyring#readme",
+  "dependencies": {
+    "command-line-args": "^6.0.1",
+    "command-line-usage": "^7.0.3"
+  },
+  "devDependencies": {
+    "@types/command-line-args": "^5.2.3",
+    "@types/command-line-usage": "^5.0.4"
+  }
+}
