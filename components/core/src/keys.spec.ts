@@ -1,6 +1,6 @@
-import { KeyConfig } from "@ssh-keyring/types"
+import { BaseRemote } from "./schema"
 import { DefaultAlgorithm, DefaultPrivateKeyConfig, DefaultPublicKeyConfig } from "./defaults"
-import { generateSshKey } from "./generateSshKey"
+import { generateSshKey } from "./keys"
 
 describe('generateSshKey', () => {
   afterEach(() => {
@@ -22,7 +22,7 @@ describe('generateSshKey', () => {
   })
 
   it('uses configured values if parameters configured', () => {
-    const expectedConfiguration: { publicKeyEncoding: KeyConfig['publicKey'], privateKeyEncoding: KeyConfig['privateKey'] } = {
+    const expectedConfiguration: { publicKeyEncoding: BaseRemote['publicKey'], privateKeyEncoding: BaseRemote['privateKey'] } = {
       publicKeyEncoding: {
         format: 'jwk'
       },

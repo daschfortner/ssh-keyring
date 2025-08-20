@@ -19,7 +19,8 @@
   "homepage": "https://github.com/daschfortner/ssh-keyring#readme",
   "dependencies": {
     "command-line-args": "^6.0.1",
-    "command-line-usage": "^7.0.3"
+    "command-line-usage": "^7.0.3",
+    "toml": "^3.0.0"
   },
   "devDependencies": {
     "@types/command-line-args": "^5.2.3",

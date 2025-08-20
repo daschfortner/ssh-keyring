@@ -4,7 +4,8 @@
   "description": "Core utilities for running the ssh keyring",
   "main": "out/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -17,7 +18,9 @@
   },
   "homepage": "https://github.com/daschfortner/ssh-keyring#readme",
   "dependencies": {
-    "@types/node": "^24.3.0"
+    "@types/node": "^24.3.0",
+    "toml": "^3.0.0",
+    "yup": "^1.7.0"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",

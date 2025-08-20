@@ -22,7 +22,6 @@
   },
   "workspaces": [
     "components/cli",
-    "components/types",
     "components/github",
     "components/core"
   ]

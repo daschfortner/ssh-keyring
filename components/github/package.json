@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/daschfortner/ssh-keyring/issues"
   },
-  "homepage": "https://github.com/daschfortner/ssh-keyring#readme"
+  "homepage": "https://github.com/daschfortner/ssh-keyring#readme",
+  "dependencies": {
+    "yup": "^1.7.0"
+  }
 }

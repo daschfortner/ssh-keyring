@@ -1,25 +1,26 @@
-import { exec as callbackExec } from 'child_process'
-import { promisify } from 'util'
 import commandLineArgs from 'command-line-args'
 import commandLineUsage from 'command-line-usage'
-import type { OptionDefinition } from 'command-line-args'
-import type { Plugin } from '@ssh-keyring/types'
+import type { OptionDefinition } from 'command-line-usage'
+import { createLogger, LogLevels, type Plugin } from '@ssh-keyring/core'
+import { loadPlugins } from './loadPlugins'
 
-const exec = promisify(callbackExec)
 
-const loadPlugins: () => Promise<Plugin[]> = async () => {
-  const { stdout } = await exec('npm list -g --json')
+const CliOptions: OptionDefinition[] = [
+  {
+    name: 'log-level',
+    description: 'Logging level to use (debug, info, or error)',
+    alias: 'l',
+    defaultValue: 'error',
+    type: String,
+  },
+  {
+    name: 'remotes-path',
+    description: 'Override the default configuration paths and use a costom remote configuration path',
+    alias: 'r',
+    type: String,
+  }
+]
 
-  const globalPackages = JSON.parse(stdout)
-
-  console.log(globalPackages)
-  
-  const keyringPlugins = Object.keys(globalPackages.dependencies).filter((d) => d.startsWith('@ssh-keyring/plugin-'))
-
-  const plugins = await Promise.all(keyringPlugins.map(async (plugin) => await import(plugin)))
-
-  return plugins.map((p) => p.default.default)
-}
 
 const printUsage = (plugins: Plugin[]) => {
   return commandLineUsage([
@@ -30,6 +31,10 @@ const printUsage = (plugins: Plugin[]) => {
     {
       header: 'USAGE',
       content: 'ssh-keyring <plugin> [args]',
+    },
+    {
+      header: 'ARGUMENTS',
+      optionList: CliOptions,
     },
     {
       header: 'INSTALLING PLUGINS',
@@ -54,17 +59,12 @@ const printUsage = (plugins: Plugin[]) => {
 export const main = async () => {
   const availablePlugins = await loadPlugins()
 
-  const cliOptions: OptionDefinition[] = [
-    {
-      name: 'pluginCommand',
-      defaultOption: true,
-      type: String,
-    }
-  ]
+  const { pluginCommand, logLevel, _unknown } = commandLineArgs([{ name: 'pluginCommand', defaultOption: true }, ...CliOptions], { stopAtFirstUnknown: true, camelCase: true })
 
-  const { pluginCommand, _unknown } = commandLineArgs(cliOptions, { stopAtFirstUnknown: true })
+  const logger = createLogger(LogLevels.includes(logLevel) ? logLevel : 'error')
 
   if (pluginCommand === undefined) {
+    // using normal log so user can't accidentally turn off usage text
     console.log(printUsage(availablePlugins))
     process.exit(0)
   }
@@ -72,11 +72,10 @@ export const main = async () => {
   const selectedPlugin = availablePlugins.find((plugin) => plugin.name === pluginCommand)
 
   if (selectedPlugin === undefined) {
-    console.error(`plugin '${pluginCommand}' is not installed`)
-    console.error('see <insert url> for instructions to install plugins')
+    logger.error(`plugin '${pluginCommand}' is not installed`)
+    logger.error('see <insert url> for instructions to install plugins')
+    // using normal log so user can't accidentally turn off usage text
     console.log(printUsage(availablePlugins))
     process.exit(1)
   }
-
-  await selectedPlugin.run(_unknown ?? [])
 }

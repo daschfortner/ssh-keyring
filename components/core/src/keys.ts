@@ -1,8 +1,8 @@
 import { generateKeyPairSync } from 'node:crypto'
-import { KeyConfig } from '@ssh-keyring/types'
+import { BaseRemote } from './schema'
 import { DefaultAlgorithm, DefaultPrivateKeyConfig, DefaultPublicKeyConfig } from './defaults'
 
-export const generateSshKey = async (config: KeyConfig) => {
+export const generateSshKey = async (config: BaseRemote) => {
   return generateKeyPairSync(DefaultAlgorithm, {
     publicKeyEncoding: {
       ...DefaultPublicKeyConfig,
