@@ -78,4 +78,6 @@ export const main = async () => {
     console.log(printUsage(availablePlugins))
     process.exit(1)
   }
+
+
 }
