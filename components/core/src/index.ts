@@ -1,6 +1,6 @@
 export * from './schema'
 export * from './logger'
-export { 
+export {
   InvalidPluginRemoteError,
   NoPluginRemotesError,
   loadPluginRemotes,

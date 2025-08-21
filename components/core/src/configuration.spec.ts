@@ -1,6 +1,6 @@
-import { Plugin } from "./schema"
-import { loadPluginRemotes, NoPluginRemotesError } from "./configuration"
-import { object } from "yup"
+import { Plugin } from './schema'
+import { loadPluginRemotes, NoPluginRemotesError } from './configuration'
+import { object } from 'yup'
 
 describe('loadPluginRemotes', () => {
   it('throws an error if there is no remotes for the plugin', () => {
@@ -12,7 +12,9 @@ describe('loadPluginRemotes', () => {
 
     const configuration = {}
 
-    expect(() => loadPluginRemotes(configuration, plugin)).toThrow(NoPluginRemotesError)
+    expect(() => loadPluginRemotes(configuration, plugin)).toThrow(
+      NoPluginRemotesError,
+    )
   })
 
   it('collects the remotes based on plugin name', () => {
@@ -30,9 +32,11 @@ describe('loadPluginRemotes', () => {
         work: {
           personalAccessToken: 'glpat-something-else',
         },
-      }
+      },
     }
-    
-    expect(loadPluginRemotes(configuration, plugin)).toMatchObject(configuration.gitlab)
+
+    expect(loadPluginRemotes(configuration, plugin)).toMatchObject(
+      configuration.gitlab,
+    )
   })
 })

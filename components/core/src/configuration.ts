@@ -1,4 +1,4 @@
-import { ConfigurationItem, Plugin } from "./schema";
+import { ConfigurationItem, Plugin } from './schema'
 
 // TODO: move to an errors.ts file
 export class NoPluginRemotesError extends Error {
@@ -13,13 +13,21 @@ export class InvalidPluginRemoteError extends Error {
   }
 }
 
-type LoadPluginRemotesFunction = (configuration: ConfigurationItem, plugin: Plugin) => ConfigurationItem
+type LoadPluginRemotesFunction = (
+  configuration: ConfigurationItem,
+  plugin: Plugin,
+) => ConfigurationItem
 
-export const loadPluginRemotes: LoadPluginRemotesFunction = (configuration, plugin) => {
+export const loadPluginRemotes: LoadPluginRemotesFunction = (
+  configuration,
+  plugin,
+) => {
   const { name } = plugin
 
   if (!(name in configuration)) {
-    throw new NoPluginRemotesError(`no configuration for plugin '${name}' found`)
+    throw new NoPluginRemotesError(
+      `no configuration for plugin '${name}' found`,
+    )
   }
 
   const remotes = configuration[name]

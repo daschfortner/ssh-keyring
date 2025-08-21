@@ -7,7 +7,7 @@ export type Logger = {
 
 export const LogLevels = ['debug', 'info', 'log', 'error'] as const
 
-type LogLevel = typeof LogLevels[number]
+type LogLevel = (typeof LogLevels)[number]
 
 type LogLevelCreator = (logLevel: LogLevel) => Logger
 
@@ -29,5 +29,5 @@ export const createLogger: LogLevelCreator = (logLevel: LogLevel) => ({
   },
   error: (message?: string) => {
     console.error(message)
-  }
+  },
 })

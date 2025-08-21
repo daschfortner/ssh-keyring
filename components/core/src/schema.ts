@@ -1,4 +1,4 @@
-import { object, string, InferType, number } from "yup";
+import { object, string, InferType, number } from 'yup'
 
 export const baseRemoteSchema = object({
   publicKey: object({
@@ -23,5 +23,9 @@ export const pluginSchema = object({
 export type ConfigurationItem = { [key: string]: unknown }
 
 export type Plugin = InferType<typeof pluginSchema> & {
-  configureRemote: (name: string, remote: ConfigurationItem, args: string[]) => Promise<string>
+  configureRemote: (
+    name: string,
+    remote: ConfigurationItem,
+    args: string[],
+  ) => Promise<string>
 }

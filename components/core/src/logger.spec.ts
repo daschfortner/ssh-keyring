@@ -1,4 +1,4 @@
-import { createLogger } from "./logger"
+import { createLogger } from './logger'
 
 describe('createLogger', () => {
   const realLog = console.log
@@ -65,7 +65,5 @@ describe('createLogger', () => {
     expect(console.error).toHaveBeenCalledWith('test')
   })
 
-  it('prints only error logs for log level "error"', () => {
-
-  })
+  it('prints only error logs for log level "error"', () => {})
 })
