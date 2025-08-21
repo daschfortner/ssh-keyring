@@ -1,4 +1,4 @@
-import { object, string, InferType } from "yup";
+import { object, string, InferType, number } from "yup";
 
 export const baseRemoteSchema = object({
   publicKey: object({

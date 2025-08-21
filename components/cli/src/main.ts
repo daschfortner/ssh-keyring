@@ -4,7 +4,6 @@ import type { OptionDefinition } from 'command-line-usage'
 import { createLogger, LogLevels, type Plugin } from '@ssh-keyring/core'
 import { loadPlugins } from './loadPlugins'
 
-
 const CliOptions: OptionDefinition[] = [
   {
     name: 'log-level',
@@ -15,12 +14,12 @@ const CliOptions: OptionDefinition[] = [
   },
   {
     name: 'remotes-path',
-    description: 'Override the default configuration paths and use a costom remote configuration path',
+    description:
+      'Override the default configuration paths and use a costom remote configuration path',
     alias: 'r',
     type: String,
-  }
+  },
 ]
-
 
 const printUsage = (plugins: Plugin[]) => {
   return commandLineUsage([
@@ -41,17 +40,16 @@ const printUsage = (plugins: Plugin[]) => {
       content: [
         'To run the keyring on a remote, you need to install a plugin.',
         'For instructions on how to install a plugin, see <insert link>.',
-      ]
+      ],
     },
     {
       header: 'AVAILABLE PLUGINS',
-      content: plugins.length ? plugins.map((p) => ({
-        header: p.name,
-        content: p.description,
-      })) : [
-        'No plugins available.',
-        'Install a plugin to run the keyring.',
-      ]
+      content: plugins.length
+        ? plugins.map((p) => ({
+            header: p.name,
+            content: p.description,
+          }))
+        : ['No plugins available.', 'Install a plugin to run the keyring.'],
     },
   ])
 }
@@ -59,7 +57,10 @@ const printUsage = (plugins: Plugin[]) => {
 export const main = async () => {
   const availablePlugins = await loadPlugins()
 
-  const { pluginCommand, logLevel, _unknown } = commandLineArgs([{ name: 'pluginCommand', defaultOption: true }, ...CliOptions], { stopAtFirstUnknown: true, camelCase: true })
+  const { pluginCommand, logLevel, _unknown } = commandLineArgs(
+    [{ name: 'pluginCommand', defaultOption: true }, ...CliOptions],
+    { stopAtFirstUnknown: true, camelCase: true },
+  )
 
   const logger = createLogger(LogLevels.includes(logLevel) ? logLevel : 'error')
 
@@ -69,7 +70,9 @@ export const main = async () => {
     process.exit(0)
   }
 
-  const selectedPlugin = availablePlugins.find((plugin) => plugin.name === pluginCommand)
+  const selectedPlugin = availablePlugins.find(
+    (plugin) => plugin.name === pluginCommand,
+  )
 
   if (selectedPlugin === undefined) {
     logger.error(`plugin '${pluginCommand}' is not installed`)
@@ -78,6 +81,4 @@ export const main = async () => {
     console.log(printUsage(availablePlugins))
     process.exit(1)
   }
-
-
 }

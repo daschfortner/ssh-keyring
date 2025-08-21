@@ -17,7 +17,7 @@ describe('createLogger', () => {
     console.error = realError
   })
 
-  it('logs debug, info, and error logs if log level is debug', () => {
+  it('prints everything for debug log level', () => {
     const logger = createLogger('debug')
 
     logger.debug('test')
@@ -33,7 +33,7 @@ describe('createLogger', () => {
     expect(console.error).toHaveBeenCalledWith('test')
   })
 
-  it('logs info and error logs if log level is info', () => {
+  it('prints info, log, and error logs for log level "info"', () => {
     const logger = createLogger('info')
 
     logger.debug('test')
@@ -49,7 +49,7 @@ describe('createLogger', () => {
     expect(console.error).toHaveBeenCalledWith('test')
   })
 
-  it('logs error messages only if log level is error', () => {
+  it('prints log and error logs for log level "log"', () => {
     const logger = createLogger('error')
 
     logger.debug('test')
@@ -63,5 +63,9 @@ describe('createLogger', () => {
     logger.error('test')
 
     expect(console.error).toHaveBeenCalledWith('test')
+  })
+
+  it('prints only error logs for log level "error"', () => {
+
   })
 })
