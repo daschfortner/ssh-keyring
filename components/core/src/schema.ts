@@ -1,4 +1,5 @@
 import { object, string, InferType, number } from 'yup'
+import { Logger } from './logger'
 
 export const baseRemoteSchema = object({
   publicKey: object({
@@ -27,7 +28,14 @@ export type Plugin = InferType<typeof pluginSchema> & {
     name: string,
     remote: ConfigurationItem,
     publicKey: string,
+    logger: Logger,
   ) => Promise<Host>
+}
+
+export class PluginError extends Error {
+  constructor(message: string) {
+    super(message)
+  }
 }
 
 export const hostSchema = object({
