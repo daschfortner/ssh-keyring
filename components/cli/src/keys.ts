@@ -16,7 +16,7 @@ const DefaultPrivateKeyConfig: BaseRemote['privateKey'] = {
 }
 
 export const generateSshKey = async (config: BaseRemote) => {
-  return generateKeyPairSync(DefaultAlgorithm, {
+  const { publicKey, privateKey } =  generateKeyPairSync(DefaultAlgorithm, {
     publicKeyEncoding: {
       ...DefaultPublicKeyConfig,
       ...config.publicKey,
@@ -26,4 +26,9 @@ export const generateSshKey = async (config: BaseRemote) => {
       ...config.privateKey,
     },
   })
+
+  return {
+    publicKey: publicKey.export({...DefaultPublicKeyConfig, ...config.publicKey}).toString(),
+    privateKey: privateKey.export({...DefaultPrivateKeyConfig, ...config.privateKey}).toString(),
+  }
 }

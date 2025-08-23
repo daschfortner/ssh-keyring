@@ -1,6 +1,7 @@
 import {
   baseRemoteSchema,
   ConfigurationItem,
+  Host,
   loadPluginRemotes,
   Logger,
   Plugin,
@@ -59,18 +60,17 @@ export const runPlugin: RunPlugin = async (plugin, configuration, logger) => {
 
       return true
     },
-  )
+  ) as [string, ConfigurationItem][]
+
+  const configurations: Record<string, Host> = {}
 
   for (const [remoteName, remote] of validBaseRemoteEntries) {
     const baseRemote = await baseRemoteSchema.validate(remote)
     const { privateKey, publicKey } = await generateSshKey(baseRemote)
 
-    // TODO: don't use this class
-    const sshConfig = new SSHConfig()
-
-    sshConfig.append({
-      Host: remoteName,
-    })
+    const remoteConfiguration = plugin.configureRemote(remoteName, remote, publicKey)
+    
+    // write out keys and configure ssh config object
   }
 
   return true
