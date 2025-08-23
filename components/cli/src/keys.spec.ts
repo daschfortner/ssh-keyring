@@ -34,10 +34,12 @@ describe('generateSshKey', () => {
       privateKeyEncoding: BaseRemote['privateKey']
     } = {
       publicKeyEncoding: {
-        format: 'jwk',
+        format: 'pem',
+        type: 'pkcs1',
       },
       privateKeyEncoding: {
-        format: 'jwk',
+        format: 'pem',
+        type: 'sec1',
         passphrase: 'super secret passphrase',
       },
     }

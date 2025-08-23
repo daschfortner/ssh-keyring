@@ -1,4 +1,4 @@
-import { ConfigurationItem, Logger } from '@ssh-keyring/core'
+import { ConfigurationItem, Host, Logger } from '@ssh-keyring/core'
 import { readFile } from 'fs/promises'
 import { parse } from 'toml'
 
@@ -14,9 +14,11 @@ export class NoPluginRemotesError extends Error {
   }
 }
 
+export const DefaultOutputDirectory = '~/.ssh/keyring'
+
 const DefaultConfigurationLocations: string[] = [
-  '~/.config/ssh-keyring/keyringrc',
-  '~/.keyringrc',
+  '~/.config/ssh-keyring/remotes',
+  '~/.keyring/remotes',
 ]
 
 type LoadConfiguration = (
@@ -33,8 +35,8 @@ export const loadConfiguration: LoadConfiguration = async (
       ? [configPath, ...DefaultConfigurationLocations]
       : DefaultConfigurationLocations
 
-  logger.info('looking for configuration in:')
-  pathSearchLocations.forEach((l) => logger.info(`  - ${l}`))
+  logger.debug('looking for configuration in:')
+  pathSearchLocations.forEach((l) => logger.debug(`  - ${l}`))
 
   for (const path in pathSearchLocations) {
     try {
@@ -84,4 +86,17 @@ export const getPluginRemotes: GetPluginRemotes = (
   }
 
   return configuration[pluginName] as ConfigurationItem
+}
+
+type GenerateSshConfiguration = (remotes: Record<string, Host>) => string
+
+export const generateSshConfiguration: GenerateSshConfiguration = (remotes) => {
+  const hosts = Object.keys(remotes).map((remoteName) => {
+    const configuredOptions = Object.keys(remotes[remoteName]) as (keyof Host)[]
+    const hostConfigurationString = configuredOptions.map((key) => `  ${key} ${remotes[remoteName][key]}`).join('\n')
+
+    return `Host ${remoteName}\n${hostConfigurationString}`
+  })
+
+  return hosts.join('\n\n')
 }

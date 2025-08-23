@@ -1,13 +1,8 @@
 import type { Plugin, ConfigurationItem } from '@ssh-keyring/core'
 import { InvalidPluginRemoteError } from '@ssh-keyring/core'
-import { ValidationError } from 'yup'
 import { githubRemoteSchema } from './schema'
 
-const printUsage = () => {
-  
-}
-
-const configureRemote = async (name: string, remote: ConfigurationItem, args: string[]) => {
+const configureRemote = async (name: string, remote: ConfigurationItem, publicKey: string) => {
   try {
     githubRemoteSchema.validateSync(remote)
   } catch(e) {
@@ -16,8 +11,17 @@ const configureRemote = async (name: string, remote: ConfigurationItem, args: st
 
   const githubRemote = await githubRemoteSchema.validate(remote)
 
+  await fetch('https://api.github.com/user/keys', {
+    headers: {
+      'Authorization': `Bearer ${githubRemote.accessToken}`,
+    },
+    body: JSON.stringify({
+      title: githubRemote.keyTitle,
+      key: publicKey,
+    })
+  })
 
-  return ''
+  return {}
 }
 
 const plugin: Plugin = {

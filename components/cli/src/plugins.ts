@@ -9,7 +9,8 @@ import {
 import { exec as callbackExec } from 'child_process'
 import { promisify } from 'util'
 import { generateSshKey } from './keys'
-import SSHConfig from 'ssh-config'
+import { mkdir, writeFile } from 'fs/promises'
+import { generateSshConfiguration } from './configuration'
 
 const exec = promisify(callbackExec)
 
@@ -33,9 +34,10 @@ type RunPlugin = (
   plugin: Plugin,
   configuration: ConfigurationItem,
   logger: Logger,
+  outDir: string,
 ) => Promise<boolean>
 
-export const runPlugin: RunPlugin = async (plugin, configuration, logger) => {
+export const runPlugin: RunPlugin = async (plugin, configuration, logger, outDir) => {
   const remotes = loadPluginRemotes(configuration, plugin)
 
   if (Object.keys(remotes).length === 0) {
@@ -68,10 +70,21 @@ export const runPlugin: RunPlugin = async (plugin, configuration, logger) => {
     const baseRemote = await baseRemoteSchema.validate(remote)
     const { privateKey, publicKey } = await generateSshKey(baseRemote)
 
-    const remoteConfiguration = plugin.configureRemote(remoteName, remote, publicKey)
-    
-    // write out keys and configure ssh config object
+    configurations[remoteName] = await plugin.configureRemote(remoteName, remote, publicKey)
+
+    await mkdir(`${outDir}/keys/${remoteName}`, { recursive: true })
+    await writeFile(`${outDir}/keys/${remoteName}/id_ed25519.pem`, privateKey)
+    await writeFile(`${outDir}/keys/${remoteName}/id_ed25519.pem.pub`, publicKey)
+
+    configurations[remoteName].IdentityFile = `${outDir}/keys/${remoteName}/id_ed25519.pem`
   }
+
+  // TODO add some logging in here
+  await writeFile(`${outDir}/config`, generateSshConfiguration(configurations))
+
+  logger.log('ssh configuration created')
+  logger.log('add the following line to your ~/.ssh/config to access your remotes:')
+  logger.log(`    Include ${outDir}/config`)
 
   return true
 }
