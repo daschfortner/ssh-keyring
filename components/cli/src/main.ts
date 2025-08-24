@@ -3,8 +3,9 @@ import commandLineUsage from 'command-line-usage'
 import type { OptionDefinition } from 'command-line-usage'
 import { createLogger, LogLevels, type Plugin } from '@ssh-keyring/core'
 import { loadPlugins, runPlugin } from './plugins'
-import { DefaultOutputDirectory, loadConfiguration, NoRemoteConfigurationFoundError } from './configuration'
+import { loadConfiguration, NoRemoteConfigurationFoundError } from './configuration'
 import { mkdir, readdir, rmdir } from 'node:fs/promises'
+import { homedir } from 'os'
 
 const CliOptions: OptionDefinition[] = [
   {
@@ -16,8 +17,9 @@ const CliOptions: OptionDefinition[] = [
   },
   {
     name: 'output-directory',
-    description: 'Specify the output directory in which to save the keys and configuration file',
+    description: `Specify the output directory in which to save the keys and configuration file (defaults to ${homedir}/.ssh/keyring)`,
     alias: 'o',
+    defaultValue: `${homedir}/.ssh/keyring`,
     type: String,
   },
   {
@@ -96,7 +98,7 @@ export const main = async () => {
     process.exit(1)
   }
 
-  const outDir = outputDirectory ?? DefaultOutputDirectory
+  const outDir = outputDirectory
 
   try {
     const files = await readdir(outDir)
@@ -108,7 +110,7 @@ export const main = async () => {
         await rmdir(outDir, { recursive: true })
       } else {
         logger.error(`'${outDir}' exists and is not empty`)
-        logger.error(`remote '${outDir}' or use the --force flag to remove`)
+        logger.error(`remove '${outDir}' or use the --force flag to remove`)
         process.exit(1)
       }
     } 
@@ -117,8 +119,9 @@ export const main = async () => {
   }
 
   try {
-    logger.debug(`remaking output directory '${outDir}'`)
-    await mkdir(outDir, { recursive: true })
+    logger.debug(`making output directory '${outDir}'`)
+    const createdDir = await mkdir(outDir, { recursive: true })
+    logger.debug(`'${createdDir}' created`)
   } catch(e) {
     logger.error(`could not create output directory '${outDir}'`)
     logger.error(`make sure you have permissions to create '${outDir}'`)

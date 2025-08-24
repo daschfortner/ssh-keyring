@@ -14,8 +14,6 @@ export class NoPluginRemotesError extends Error {
   }
 }
 
-export const DefaultOutputDirectory = '~/.ssh/keyring'
-
 const DefaultConfigurationLocations: string[] = [
   '~/.config/ssh-keyring/remotes',
   '~/.keyring/remotes',
@@ -41,9 +39,11 @@ export const loadConfiguration: LoadConfiguration = async (
   for (const path of pathSearchLocations) {
     try {
       const fileContents = await readFile(path)
+      // TODO throw toml parsing error ?
       return parse(fileContents.toString())
     } catch (e) {
       logger.debug(`configuration at '${path}' could not be read`)
+      logger.debug(String(e))
     }
   }
 

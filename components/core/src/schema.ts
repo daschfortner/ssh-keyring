@@ -2,16 +2,7 @@ import { object, string, InferType, number } from 'yup'
 import { Logger } from './logger'
 
 export const baseRemoteSchema = object({
-  public_key: object({
-    type: string().required().oneOf(['spki', 'pkcs1']).nonNullable(),
-    format: string().required().oneOf(['pem']).nonNullable(),
-  }).optional(),
-  private_key: object({
-    type: string().required().oneOf(['pkcs1', 'pkcs8', 'sec1']).nonNullable(),
-    format: string().required().oneOf(['pem']).nonNullable(),
-    cipher: string().optional(),
-    passphrase: string().optional(),
-  }).optional(),
+  passphrase: string().optional(),
 })
 
 export type BaseRemote = InferType<typeof baseRemoteSchema>

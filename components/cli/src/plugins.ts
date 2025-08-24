@@ -38,6 +38,7 @@ type RunPlugin = (
 ) => Promise<boolean>
 
 export const runPlugin: RunPlugin = async (plugin, configuration, logger, outDir) => {
+  logger.debug(`loading '${plugin.name}' remotes`)
   const remotes = loadPluginRemotes(configuration, plugin)
 
   if (Object.keys(remotes).length === 0) {
@@ -46,10 +47,16 @@ export const runPlugin: RunPlugin = async (plugin, configuration, logger, outDir
     return true
   }
 
+  logger.debug(`'${plugin.name}' remotes found:`)
+  logger.debug(JSON.stringify(remotes, null, 2))
+
+  logger.debug('finding remotes that comply with base schema')
+
   const validBaseRemoteEntries = Object.entries(remotes).filter(
     ([remoteName, remote]) => {
       try {
         baseRemoteSchema.validate(remote)
+        logger.debug(`  - ${remoteName} is valid`)
       } catch (e) {
         logger.info(`remote schema for '${remoteName}' invalid`)
         logger.info(`could not parse base schema configuration: ${e}`)
@@ -64,14 +71,21 @@ export const runPlugin: RunPlugin = async (plugin, configuration, logger, outDir
     },
   ) as [string, ConfigurationItem][]
 
+  logger.debug('validated remotes:')
+  logger.debug(JSON.stringify(Object.fromEntries(validBaseRemoteEntries), null, 2))
+
   const configurations: Record<string, Host> = {}
 
   for (const [remoteName, remote] of validBaseRemoteEntries) {
+    logger.debug(`generating key for '${remoteName}'`)
     const baseRemote = await baseRemoteSchema.validate(remote)
     const { privateKey, publicKey } = await generateSshKey(baseRemote)
+    console.log(publicKey)
 
+    logger.debug(`calling '${plugin.name}' plugin to configure remote`)
     configurations[remoteName] = await plugin.configureRemote(remoteName, remote, publicKey, logger)
 
+    logger.debug(`saving key configuraiton for '${plugin.name}'`)
     await mkdir(`${outDir}/keys/${remoteName}`, { recursive: true })
     await writeFile(`${outDir}/keys/${remoteName}/id_ed25519.pem`, privateKey)
     await writeFile(`${outDir}/keys/${remoteName}/id_ed25519.pem.pub`, publicKey)
@@ -79,7 +93,7 @@ export const runPlugin: RunPlugin = async (plugin, configuration, logger, outDir
     configurations[remoteName].IdentityFile = `${outDir}/keys/${remoteName}/id_ed25519.pem`
   }
 
-  // TODO add some logging in here
+  logger.debug(`writing ssh config for '${plugin.name}' remotes`)
   await writeFile(`${outDir}/config`, generateSshConfiguration(configurations))
 
   logger.log('ssh configuration created')

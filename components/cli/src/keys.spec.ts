@@ -27,33 +27,4 @@ describe('generateSshKey', () => {
 
     generateSshKey({})
   })
-
-  it('uses configured values if parameters configured', () => {
-    const expectedConfiguration: {
-      publicKeyEncoding: BaseRemote['public_key']
-      privateKeyEncoding: BaseRemote['private_key']
-    } = {
-      publicKeyEncoding: {
-        format: 'pem',
-        type: 'pkcs1',
-      },
-      privateKeyEncoding: {
-        format: 'pem',
-        type: 'sec1',
-        passphrase: 'super secret passphrase',
-      },
-    }
-
-    jest.mock('node:crypto', () => ({
-      generateKeyPairSync: (alg: string, options: object) => {
-        expect(alg).toBe('ed25519')
-        expect(options).toMatchObject(expectedConfiguration)
-      },
-    }))
-
-    generateSshKey({
-      private_key: expectedConfiguration.privateKeyEncoding,
-      public_key: expectedConfiguration.publicKeyEncoding,
-    })
-  })
 })

@@ -12,10 +12,7 @@ from node:24-alpine3.22@sha256:fef54ced750c979986c8e9caa5bce4e5be8cdf9101f07b995
 
 copy --from=build /build/ssh-keyring/release /tmp/release
 
-run npm i -g /tmp/release/*
-
-run npm list -g
-
-# TODO set up a non-root user so volume mounts don't come in with root perms
+run apk add openssh openssl && \
+    npm i -g /tmp/release/*
 
 entrypoint ["ssh-keyring"]

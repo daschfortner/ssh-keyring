@@ -18,22 +18,23 @@ const plugin: Plugin = {
 
     const githubHost = githubRemote.api_host ?? 'api.github.com'
 
-    try {
-      await fetch(`https://${githubHost}/user/keys`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${githubRemote.access_token}`,
-          Accept: 'application/vnd.github+json',
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
-        body: JSON.stringify({
-          ...(githubRemote.key_title !== undefined ? { title: githubRemote.key_title } : {}),
-          key: publicKey,
-        }),
-      })
-    } catch (e) {
+    logger.debug(`making request at https://${githubHost}/user/keys`)
+    const response = await fetch(`https://${githubHost}/user/keys`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${githubRemote.access_token}`,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+      body: JSON.stringify({
+        ...(githubRemote.key_title !== undefined ? { title: githubRemote.key_title } : {}),
+        key: publicKey,
+      }),
+    })
+
+    if (!response.ok) {
       logger.debug('failed to upload key to github account:')
-      logger.debug(String(e))
+      logger.debug(JSON.stringify(await response.json(), null, 2))
 
       throw new PluginError('could not configure github plugin')
     }
