@@ -30,8 +30,8 @@ describe('generateSshKey', () => {
 
   it('uses configured values if parameters configured', () => {
     const expectedConfiguration: {
-      publicKeyEncoding: BaseRemote['publicKey']
-      privateKeyEncoding: BaseRemote['privateKey']
+      publicKeyEncoding: BaseRemote['public_key']
+      privateKeyEncoding: BaseRemote['private_key']
     } = {
       publicKeyEncoding: {
         format: 'pem',
@@ -52,8 +52,8 @@ describe('generateSshKey', () => {
     }))
 
     generateSshKey({
-      privateKey: expectedConfiguration.privateKeyEncoding,
-      publicKey: expectedConfiguration.publicKeyEncoding,
+      private_key: expectedConfiguration.privateKeyEncoding,
+      public_key: expectedConfiguration.publicKeyEncoding,
     })
   })
 })

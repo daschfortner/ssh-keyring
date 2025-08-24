@@ -38,7 +38,7 @@ export const loadConfiguration: LoadConfiguration = async (
   logger.debug('looking for configuration in:')
   pathSearchLocations.forEach((l) => logger.debug(`  - ${l}`))
 
-  for (const path in pathSearchLocations) {
+  for (const path of pathSearchLocations) {
     try {
       const fileContents = await readFile(path)
       return parse(fileContents.toString())

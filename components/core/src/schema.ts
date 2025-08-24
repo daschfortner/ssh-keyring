@@ -2,11 +2,11 @@ import { object, string, InferType, number } from 'yup'
 import { Logger } from './logger'
 
 export const baseRemoteSchema = object({
-  publicKey: object({
+  public_key: object({
     type: string().required().oneOf(['spki', 'pkcs1']).nonNullable(),
     format: string().required().oneOf(['pem']).nonNullable(),
   }).optional(),
-  privateKey: object({
+  private_key: object({
     type: string().required().oneOf(['pkcs1', 'pkcs8', 'sec1']).nonNullable(),
     format: string().required().oneOf(['pem']).nonNullable(),
     cipher: string().optional(),

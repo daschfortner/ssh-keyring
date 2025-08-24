@@ -104,6 +104,8 @@ export const main = async () => {
     if (files.length !== 0) {
       if (force) {
         logger.log(`contents of '${outDir}' will be overwritten`)
+        logger.debug(`cleaning up existing directory '${outDir}'`)
+        await rmdir(outDir, { recursive: true })
       } else {
         logger.error(`'${outDir}' exists and is not empty`)
         logger.error(`remote '${outDir}' or use the --force flag to remove`)
@@ -115,10 +117,8 @@ export const main = async () => {
   }
 
   try {
-    logger.debug(`cleaning up existing directory '${outDir}'`)
-    await rmdir(outDir)
     logger.debug(`remaking output directory '${outDir}'`)
-    await mkdir(outDir)
+    await mkdir(outDir, { recursive: true })
   } catch(e) {
     logger.error(`could not create output directory '${outDir}'`)
     logger.error(`make sure you have permissions to create '${outDir}'`)

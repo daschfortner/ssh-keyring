@@ -70,7 +70,7 @@ export const runPlugin: RunPlugin = async (plugin, configuration, logger, outDir
     const baseRemote = await baseRemoteSchema.validate(remote)
     const { privateKey, publicKey } = await generateSshKey(baseRemote)
 
-    configurations[remoteName] = await plugin.configureRemote(remoteName, remote, publicKey)
+    configurations[remoteName] = await plugin.configureRemote(remoteName, remote, publicKey, logger)
 
     await mkdir(`${outDir}/keys/${remoteName}`, { recursive: true })
     await writeFile(`${outDir}/keys/${remoteName}/id_ed25519.pem`, privateKey)

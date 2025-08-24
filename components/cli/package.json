@@ -1,5 +1,5 @@
 {
-  "name": "@ssh-keyring/cli",
+  "name": "@ssh-keyring/ssh-keyring",
   "version": "1.0.0-alpha",
   "description": "The core module for the ssh-keyring application",
   "main": "./bin/ssh-keyring.js",

@@ -16,16 +16,18 @@ const plugin: Plugin = {
 
     const githubRemote = await githubRemoteSchema.validate(remote)
 
+    const githubHost = githubRemote.api_host ?? 'api.github.com'
+
     try {
-      await fetch('https://api.github.com/user/keys', {
+      await fetch(`https://${githubHost}/user/keys`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${githubRemote.accessToken}`,
+          Authorization: `Bearer ${githubRemote.access_token}`,
           Accept: 'application/vnd.github+json',
           'X-GitHub-Api-Version': '2022-11-28',
         },
         body: JSON.stringify({
-          title: githubRemote.keyTitle,
+          ...(githubRemote.key_title !== undefined ? { title: githubRemote.key_title } : {}),
           key: publicKey,
         }),
       })
