@@ -1,0 +1,12 @@
+[project]
+name = "ssh-keyring-cli"
+version = "0.1.0"
+description = "A tool for deploying ssh keys to remote environments"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "toml>=0.10.2",
+]
+
+[project.scripts]
+ssh-keyring = 'sshkeyring.cli:main'

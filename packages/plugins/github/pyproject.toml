@@ -1,0 +1,10 @@
+[project]
+name = "ssh-keyring-plugin-github"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[project.entry-points."sshkeyring.plugin"]
+github = 'sshkeyring.plugin.GithubPlugin'
